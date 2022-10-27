@@ -1,21 +1,16 @@
 package seedu.address.ui;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
 import seedu.address.model.group.Group;
-import seedu.address.model.person.Person;
-import seedu.address.model.social.exceptions.SocialException;
 
 /**
  * Controller for a group page
@@ -32,7 +27,7 @@ public class GroupWindow extends UiPart<Stage> {
     private PersonListPanel groupListPanel;
 
     @FXML
-    private Button emailAllButton;
+    private Button copyButton;
 
     @FXML
     private StackPane groupListPanelPlaceholder;
@@ -100,21 +95,13 @@ public class GroupWindow extends UiPart<Stage> {
     }
 
     /**
-     * Emails all the contacts in the currently displayed group.
+     * Copies the URL to the user guide to the clipboard.
      */
     @FXML
-    private void emailAll() throws SocialException, URISyntaxException, IOException {
-        ObservableList<Person> groupPersons = this.logic.getGroupedPersonList();
-        StringBuilder sb = new StringBuilder().append("mailto:");
-        for (Person person: groupPersons) {
-            if (person.getEmail() == null) {
-                throw new SocialException("No Email Link");
-            }
-            sb.append(",").append(person.getEmail());
-        }
-        URI uri = new URI(sb.toString());
-        Desktop desktop = java.awt.Desktop.getDesktop();
-        desktop.browse(uri);
+    private void copyUrl() {
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent url = new ClipboardContent();
+        url.putString("USERGUIDE_URL");
+        clipboard.setContent(url);
     }
-
 }
